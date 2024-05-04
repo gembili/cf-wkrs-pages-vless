@@ -6,10 +6,10 @@ import { connect } from 'cloudflare:sockets';
 let userID = 'd342d11e-2503-4583-b36e-524ab1f0afa4';
 
 // 生成配置文件的 CF 优选 IP
-const bestCFIP = "www.gov.se"
+const bestCFIP = "104.18.56.56"
 
 // 用于 CF 网站的代理 IP
-const proxyIPs = ["workers.cloudflare.cyou"]; // const proxyIPs = ['103.75.188.126'];
+const proxyIPs = ["35.219.50.99"]; // const proxyIPs = ['35.219.50.99'];
 let proxyIP = proxyIPs[Math.floor(Math.random() * proxyIPs.length)];
 
 let dohURL = 'https://sky.rethinkdns.com/1:-Pf_____9_8A_AMAIgE8kMABVDDmKOHTAKg='; // https://cloudflare-dns.com/dns-query or https://dns.google/dns-query
@@ -826,7 +826,6 @@ allow-lan: true
 mode: rule
 log-level: info
 unified-delay: true
-global-client-fingerprint: chrome
 dns:
   enable: true
   listen: :53
@@ -834,12 +833,18 @@ dns:
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
   default-nameserver: 
-    - 223.5.5.5
-    - 114.114.114.114
+    - 1.1.1.1
     - 8.8.8.8
   nameserver:
-    - https://dns.alidns.com/dns-query
-    - https://doh.pub/dns-query
+    - 8.8.8.8
+    - 1.1.1.1
+  proxy-server-nameserver: 
+    - 112.215.203.246
+    - 112.215.203.247
+    - 112.215.203.248
+    - 112.215.203.254
+    - 112.215.198.248
+    - 112.215.198.254
   fallback:
     - https://1.0.0.1/dns-query
     - tls://dns.google
@@ -1118,17 +1123,22 @@ function getSingConfig(userID, hostName) {
     "servers": [
       {
         "tag": "proxydns",
-        "address": "tls://8.8.8.8/dns-query",
+        "address": "local",
         "detour": "select"
       },
       {
         "tag": "localdns",
-        "address": "h3://223.5.5.5/dns-query",
+        "address": "local",
         "detour": "direct"
       },
       {
         "address": "rcode://refused",
         "tag": "block"
+      },
+      {
+        "tag": "local",
+        "address": "local",
+        "detour": "direct"
       },
       {
         "tag": "dns_fakeip",
@@ -1176,14 +1186,27 @@ function getSingConfig(userID, hostName) {
   },
   "inbounds": [
     {
+    {
       "type": "tun",
+      "tag": "tun-in",
+      "interface_name": "utun",
+      "mtu": 5123,
       "inet4_address": "172.19.0.1/30",
-      "inet6_address": "fd00::1/126",
+      "inet6_address": "fdfe:dcba:9876::1/126",
       "auto_route": true,
       "strict_route": true,
-      "sniff": true,
-      "sniff_override_destination": true,
-      "domain_strategy": "prefer_ipv4"
+      "inet4_route_exclude_address": "192.168.0.0/16",
+      "inet6_route_exclude_address": "fc00::/7",
+      "endpoint_independent_nat": true,
+      "stack": "mixed",
+      "sniff": true
+    },
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
+      "listen_port": 2080,
+      "sniff": true
     }
   ],
   "outbounds": [
