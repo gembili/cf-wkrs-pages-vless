@@ -1100,24 +1100,8 @@ rules:
 function getSingConfig(userID, hostName) {
     return `{
   "log": {
-    "disabled": false,
     "level": "info",
     "timestamp": true
-  },
-  "experimental": {
-    "clash_api": {
-      "external_controller": "127.0.0.1:9090",
-      "external_ui": "ui",
-      "external_ui_download_url": "",
-      "external_ui_download_detour": "",
-      "secret": "",
-      "default_mode": "Rule"
-    },
-    "cache_file": {
-      "enabled": true,
-      "path": "cache.db",
-      "store_fakeip": true
-    }
   },
   "dns": {
     "servers": [
@@ -1132,8 +1116,8 @@ function getSingConfig(userID, hostName) {
         "detour": "direct"
       },
       {
-        "address": "rcode://refused",
-        "tag": "block"
+        "tag": "block",
+        "address": "rcode://refused"
       },
       {
         "tag": "local",
@@ -1168,22 +1152,23 @@ function getSingConfig(userID, hostName) {
         "server": "proxydns"
       },
       {
-        "rule_set": "geosite-geolocation-!cn",
         "query_type": [
           "A",
           "AAAA"
         ],
+        "rule_set": "geosite-geolocation-!cn",
         "server": "dns_fakeip"
       }
     ],
+    "final": "proxydns",
     "fakeip": {
       "enabled": true,
       "inet4_range": "198.18.0.0/15",
       "inet6_range": "fc00::/18"
     },
-    "independent_cache": true,
-    "final": "proxydns"
+    "independent_cache": true
   },
+  
   "inbounds": [
     {
       "type": "tun",
@@ -1210,9 +1195,8 @@ function getSingConfig(userID, hostName) {
   ],
   "outbounds": [
     {
-      "tag": "select",
       "type": "selector",
-      "default": "auto",
+      "tag": "select",
       "outbounds": [
         "auto",
         "cf-vless-80",
@@ -1228,298 +1212,267 @@ function getSingConfig(userID, hostName) {
         "cf-vless-tls-2087",
         "cf-vless-tls-2096",
         "cf-vless-tls-8443"
-      ]
+      ],
+      "default": "auto"
     },
     {
+      "type": "vless",
+      "tag": "cf-vless-80",
       "server": "${bestCFIP}",
       "server_port": 80,
-      "tag": "cf-vless-80",
-      "packet_encoding": "packetaddr",
+      "uuid": "${userID}",
       "transport": {
-        "headers": {
-          "Host": [
-            "${hostName}"
-          ]
-        },
+        "type": "ws",
         "path": "/",
-        "type": "ws"
+        "headers": {
+          "Host": "${hostName}"
+        }
       },
-      "type": "vless",
-      "uuid": "${userID}"
+      "packet_encoding": "packetaddr"
     },
     {
+      "type": "vless",
+      "tag": "cf-vless-8080",
       "server": "${bestCFIP}",
       "server_port": 8080,
-      "tag": "cf-vless-8080",
-      "packet_encoding": "packetaddr",
+      "uuid": "${userID}",
       "transport": {
-        "headers": {
-          "Host": [
-            "${hostName}"
-          ]
-        },
+        "type": "ws",
         "path": "/",
-        "type": "ws"
+        "headers": {
+          "Host": "${hostName}"
+        }
       },
-      "type": "vless",
-      "uuid": "${userID}"
+      "packet_encoding": "packetaddr"
     },
     {
+      "type": "vless",
+      "tag": "cf-vless-8880",
       "server": "${bestCFIP}",
       "server_port": 8880,
-      "tag": "cf-vless-8880",
-      "packet_encoding": "packetaddr",
+      "uuid": "${userID}",
       "transport": {
-        "headers": {
-          "Host": [
-            "${hostName}"
-          ]
-        },
+        "type": "ws",
         "path": "/",
-        "type": "ws"
+        "headers": {
+          "Host": "${hostName}"
+        }
       },
-      "type": "vless",
-      "uuid": "${userID}"
+      "packet_encoding": "packetaddr"
     },
     {
+      "type": "vless",
+      "tag": "cf-vless-2052",
       "server": "${bestCFIP}",
       "server_port": 2052,
-      "tag": "cf-vless-2052",
-      "packet_encoding": "packetaddr",
+      "uuid": "${userID}",
       "transport": {
-        "headers": {
-          "Host": [
-            "${hostName}"
-          ]
-        },
+        "type": "ws",
         "path": "/",
-        "type": "ws"
+        "headers": {
+          "Host": "${hostName}"
+        }
       },
-      "type": "vless",
-      "uuid": "${userID}"
+      "packet_encoding": "packetaddr"
     },
     {
+      "type": "vless",
+      "tag": "cf-vless-2082",
       "server": "${bestCFIP}",
       "server_port": 2082,
-      "tag": "cf-vless-2082",
-      "packet_encoding": "packetaddr",
+      "uuid": "${userID}",
       "transport": {
-        "headers": {
-          "Host": [
-            "${hostName}"
-          ]
-        },
+        "type": "ws",
         "path": "/",
-        "type": "ws"
+        "headers": {
+          "Host": "${hostName}"
+        }
       },
-      "type": "vless",
-      "uuid": "${userID}"
+      "packet_encoding": "packetaddr"
     },
     {
+      "type": "vless",
+      "tag": "cf-vless-2086",
       "server": "${bestCFIP}",
       "server_port": 2086,
-      "tag": "cf-vless-2086",
-      "packet_encoding": "packetaddr",
+      "uuid": "${userID}",
       "transport": {
-        "headers": {
-          "Host": [
-            "${hostName}"
-          ]
-        },
+        "type": "ws",
         "path": "/",
-        "type": "ws"
+        "headers": {
+          "Host": "${hostName}"
+        }
       },
-      "type": "vless",
-      "uuid": "${userID}"
+      "packet_encoding": "packetaddr"
     },
     {
+      "type": "vless",
+      "tag": "cf-vless-2095",
       "server": "${bestCFIP}",
       "server_port": 2095,
-      "tag": "cf-vless-2095",
-      "packet_encoding": "packetaddr",
+      "uuid": "${userID}",
       "transport": {
-        "headers": {
-          "Host": [
-            "${hostName}"
-          ]
-        },
+        "type": "ws",
         "path": "/",
-        "type": "ws"
+        "headers": {
+          "Host": "${hostName}"
+        }
       },
-      "type": "vless",
-      "uuid": "${userID}"
+      "packet_encoding": "packetaddr"
     },
     {
+      "type": "vless",
+      "tag": "cf-vless-tls-443",
       "server": "${bestCFIP}",
       "server_port": 443,
-      "tag": "cf-vless-tls-443",
+      "uuid": "${userID}",
       "tls": {
         "enabled": true,
         "server_name": "${hostName}",
-        "insecure": false,
         "utls": {
           "enabled": true,
           "fingerprint": "chrome"
         }
       },
-      "packet_encoding": "packetaddr",
       "transport": {
-        "headers": {
-          "Host": [
-            "${hostName}"
-          ]
-        },
+        "type": "ws",
         "path": "/",
-        "type": "ws"
+        "headers": {
+          "Host": "${hostName}"
+        }
       },
-      "type": "vless",
-      "uuid": "${userID}"
+      "packet_encoding": "packetaddr"
     },
     {
+      "type": "vless",
+      "tag": "cf-vless-tls-2053",
       "server": "${bestCFIP}",
       "server_port": 2053,
-      "tag": "cf-vless-tls-2053",
+      "uuid": "${userID}",
       "tls": {
         "enabled": true,
         "server_name": "${hostName}",
-        "insecure": false,
         "utls": {
           "enabled": true,
           "fingerprint": "chrome"
         }
       },
-      "packet_encoding": "packetaddr",
       "transport": {
-        "headers": {
-          "Host": [
-            "${hostName}"
-          ]
-        },
+        "type": "ws",
         "path": "/",
-        "type": "ws"
+        "headers": {
+          "Host": "${hostName}"
+        }
       },
-      "type": "vless",
-      "uuid": "${userID}"
+      "packet_encoding": "packetaddr"
     },
     {
+      "type": "vless",
+      "tag": "cf-vless-tls-2083",
       "server": "${bestCFIP}",
       "server_port": 2083,
-      "tag": "cf-vless-tls-2083",
+      "uuid": "${userID}",
       "tls": {
         "enabled": true,
         "server_name": "${hostName}",
-        "insecure": false,
         "utls": {
           "enabled": true,
           "fingerprint": "chrome"
         }
       },
-      "packet_encoding": "packetaddr",
       "transport": {
-        "headers": {
-          "Host": [
-            "${hostName}"
-          ]
-        },
+        "type": "ws",
         "path": "/",
-        "type": "ws"
+        "headers": {
+          "Host": "${hostName}"
+        }
       },
-      "type": "vless",
-      "uuid": "${userID}"
+      "packet_encoding": "packetaddr"
     },
     {
+      "type": "vless",
+      "tag": "cf-vless-tls-2087",
       "server": "${bestCFIP}",
       "server_port": 2087,
-      "tag": "cf-vless-tls-2087",
+      "uuid": "${userID}",
       "tls": {
         "enabled": true,
         "server_name": "${hostName}",
-        "insecure": false,
         "utls": {
           "enabled": true,
           "fingerprint": "chrome"
         }
       },
-      "packet_encoding": "packetaddr",
       "transport": {
-        "headers": {
-          "Host": [
-            "${hostName}"
-          ]
-        },
+        "type": "ws",
         "path": "/",
-        "type": "ws"
+        "headers": {
+          "Host": "${hostName}"
+        }
       },
-      "type": "vless",
-      "uuid": "${userID}"
+      "packet_encoding": "packetaddr"
     },
     {
+      "type": "vless",
+      "tag": "cf-vless-tls-2096",
       "server": "${bestCFIP}",
       "server_port": 2096,
-      "tag": "cf-vless-tls-2096",
+      "uuid": "${userID}",
       "tls": {
         "enabled": true,
         "server_name": "${hostName}",
-        "insecure": false,
         "utls": {
           "enabled": true,
           "fingerprint": "chrome"
         }
       },
-      "packet_encoding": "packetaddr",
       "transport": {
-        "headers": {
-          "Host": [
-            "${hostName}"
-          ]
-        },
+        "type": "ws",
         "path": "/",
-        "type": "ws"
+        "headers": {
+          "Host": "${hostName}"
+        }
       },
-      "type": "vless",
-      "uuid": "${userID}"
+      "packet_encoding": "packetaddr"
     },
     {
+      "type": "vless",
+      "tag": "cf-vless-tls-8443",
       "server": "${bestCFIP}",
       "server_port": 8443,
-      "tag": "cf-vless-tls-8443",
+      "uuid": "${userID}",
       "tls": {
         "enabled": true,
         "server_name": "${hostName}",
-        "insecure": false,
         "utls": {
           "enabled": true,
           "fingerprint": "chrome"
         }
       },
-      "packet_encoding": "packetaddr",
       "transport": {
-        "headers": {
-          "Host": [
-            "${hostName}"
-          ]
-        },
+        "type": "ws",
         "path": "/",
-        "type": "ws"
+        "headers": {
+          "Host": "${hostName}"
+        }
       },
-      "type": "vless",
-      "uuid": "${userID}"
+      "packet_encoding": "packetaddr"
     },
     {
-      "tag": "direct",
-      "type": "direct"
+      "type": "direct",
+      "tag": "direct"
     },
     {
-      "tag": "block",
-      "type": "block"
+      "type": "block",
+      "tag": "block"
     },
     {
-      "tag": "dns-out",
-      "type": "dns"
+      "type": "dns",
+      "tag": "dns-out"
     },
     {
-      "tag": "auto",
       "type": "urltest",
+      "tag": "auto",
       "outbounds": [
         "cf-vless-80",
         "cf-vless-8080",
@@ -1536,44 +1489,15 @@ function getSingConfig(userID, hostName) {
         "cf-vless-tls-8443"
       ],
       "url": "https://www.gstatic.com/generate_204",
-      "interval": "1m",
-      "tolerance": 50,
-      "interrupt_exist_connections": false
+      "interval": "10m0s",
+      "tolerance": 50
     }
   ],
   "route": {
-    "rule_set": [
-      {
-        "tag": "geosite-geolocation-!cn",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-!cn.srs",
-        "download_detour": "select",
-        "update_interval": "1d"
-      },
-      {
-        "tag": "geosite-cn",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-cn.srs",
-        "download_detour": "select",
-        "update_interval": "1d"
-      },
-      {
-        "tag": "geoip-cn",
-        "type": "remote",
-        "format": "binary",
-        "url": "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/cn.srs",
-        "download_detour": "select",
-        "update_interval": "1d"
-      }
-    ],
-    "auto_detect_interface": true,
-    "final": "select",
     "rules": [
       {
-        "outbound": "dns-out",
-        "protocol": "dns"
+        "protocol": "dns",
+        "outbound": "dns-out"
       },
       {
         "clash_mode": "Direct",
@@ -1599,7 +1523,46 @@ function getSingConfig(userID, hostName) {
         "rule_set": "geosite-geolocation-!cn",
         "outbound": "select"
       }
-    ]
+    ],
+    "rule_set": [
+      {
+        "type": "remote",
+        "tag": "geosite-geolocation-!cn",
+        "format": "binary",
+        "url": "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-!cn.srs",
+        "download_detour": "select",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-cn",
+        "format": "binary",
+        "url": "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-cn.srs",
+        "download_detour": "select",
+        "update_interval": "24h0m0s"
+      },
+      {
+        "type": "remote",
+        "tag": "geoip-cn",
+        "format": "binary",
+        "url": "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/cn.srs",
+        "download_detour": "select",
+        "update_interval": "24h0m0s"
+      }
+    ],
+    "final": "select",
+    "auto_detect_interface": true
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "path": "cache.db",
+      "store_fakeip": true
+    },
+    "clash_api": {
+      "external_controller": "127.0.0.1:9090",
+      "external_ui": "ui",
+      "default_mode": "Rule"
+    }
   }
-}`;
 }
