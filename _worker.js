@@ -1186,7 +1186,6 @@ function getSingConfig(userID, hostName) {
   },
   "inbounds": [
     {
-    {
       "type": "tun",
       "tag": "tun-in",
       "interface_name": "utun",
@@ -1601,13 +1600,6 @@ function getSingConfig(userID, hostName) {
         "outbound": "select"
       }
     ]
-  },
-  "ntp": {
-    "enabled": true,
-    "server": "time.apple.com",
-    "server_port": 123,
-    "interval": "30m",
-    "detour": "direct"
   }
 }`;
 }
